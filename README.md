@@ -182,7 +182,7 @@ would implement.
 
 
 License
-=======
+-------
 
 Phonycron is released under an MIT license. Details are in the `LICENSE` file.
 

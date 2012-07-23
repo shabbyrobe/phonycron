@@ -2,39 +2,15 @@ Phonycron
 =========
 
 Phonycron is a PHP-based parser for a vixie cron schedule. It was created in
-order to allow a cron  schedule to be versioned and managed as part of a PHP
-project, while maintaining compatibility  with an existing complex crontab.
+order to allow a cron schedule to be versioned and managed as part of a PHP
+project, while maintaining compatibility with an existing complex crontab.
 
 It is not 100% complete, but it should be compatible with almost every cron job
-you will ever use.  See the *Limitations* section for more information.
+you will ever use. See the *Limitations* section for more information.
 
-
-Limitations
-===========
-
-Phonycron doesn't implement 100% of the features that a typical unix system cron
-would implement.
-
-The following features of cron are unimplemented in phonycron:
-
-* **Mix-n-match lists and ranges**  
-  
-  e.g. `1-15,32,55 * * * *` for every minute for the first fifteen  minutes,
-  followed by once on the thirty-second minute and once on  the fifty-fifth
-  minute.
-
-* **`W` modifier in the "day of month" field**  
-
-  e.g. `* * 3W * *` for the nearest weekday to the 3rd of the month
-
-* **`#` modifier in the "day of week" field**  
-  e.g. ``0 0 ? 1 3#2`` for the second wednesday in January
-
-* **`@reboot` macro**
- 
 
 Quickstart
-==========
+----------
 
 Create a crontab file called `crontab` in your project with the following
 contents:
@@ -66,7 +42,6 @@ Create a PHP script called `cron.php` in your project:
 
 ```php
 <?php
-
 // Register phonycron's default autoloader.
 $phonycronPath = '/path/to/phonycron';
 require_once($phonycronPath.'/src/Loader.php');
@@ -104,17 +79,17 @@ standard.
 
 
 Customising
-===========
+-----------
 
 Phonycron comes with a very limited set of output handlers and runners by
 default. It is very easy to create your own though.
 
-Runners
--------
+
+### Runners
 
 Create your own custom runner by extending `Phonycron\Runner` and implementing
 the `runDue` method. This is called when a job is due to be run and is passed an
-instance of `Phonycron\Job`. The  `$command` property of `Phonycron\Job`
+instance of `Phonycron\Job`. The `$command` property of `Phonycron\Job`
 contains the command portion of the crontab entry.
 
 If you would like your crontab to define PHP scripts to require, instead of
@@ -146,8 +121,7 @@ class RequireRunner extends Phonycron\Runner
 ```
 
 
-Output Handlers
----------------
+### Output Handlers
 
 Phonycron swallows all output by default. If your `Phonycron\Runner` has an
 instance of `Phonycron\OutputHandler` in its `$outputHandler` property, the
@@ -182,6 +156,29 @@ class FileLogHandler implements OutputHandler
 }
 
 ```
+
+
+Limitations
+-----------
+
+Phonycron doesn't implement 100% of the features that a typical unix system cron
+would implement.
+
+* **Mix-n-match lists and ranges**
+  
+  e.g. `1-15,32,55 * * * *` for every minute for the first fifteen  minutes,
+  followed by once on the thirty-second minute and once on  the fifty-fifth
+  minute.
+
+* **`W` modifier in the "day of month" field**  
+
+  e.g. `* * 3W * *` for the nearest weekday to the 3rd of the month
+
+* **`#` modifier in the "day of week" field**  
+
+  e.g. `0 0 ? 1 3#2` for the second wednesday in January
+
+* **`@reboot` macro**
 
 
 License

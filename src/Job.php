@@ -18,6 +18,11 @@ class Job
     
     public $raw;
     
+    /**
+     * Put any extra data in here.
+     */
+    public $metadata = array();
+    
     public function runsAt($time)
     {
         if (!in_array(date('i', $time), $this->minutes))

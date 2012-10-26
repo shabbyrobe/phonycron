@@ -5,6 +5,8 @@ class SystemRunner extends Runner
 {
     public $cwd;
     
+    public $outputTemplate = "<err>\n<out>";
+    
     public function __construct($cwd=null)
     {
         $this->cwd = $cwd;
@@ -16,7 +18,17 @@ class SystemRunner extends Runner
         if ($this->cwd)
             chdir($this->cwd);
         
-        exec($job->command, $output);
-        return implode(PHP_EOL, $output);
+        $spec = [['pipe', 'r'], ['pipe', 'w'],  ['pipe', 'w']];
+        $p = proc_open($job->command, $spec, $pipes);
+        fclose($pipes[0]);
+        $out = stream_get_contents($pipes[1]);
+        $err = stream_get_contents($pipes[2]);
+        $return = proc_close($p);
+        
+        return strtr($this->outputTemplate, array(
+            '<out>'=>$out,
+            '<err>'=>$err,
+            '<return>'=>$return
+        ));
     }
 }

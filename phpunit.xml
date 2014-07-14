@@ -1,11 +1,11 @@
 <phpunit forceCoversAnnotation="true"
-	bootstrap="config.php">
+	bootstrap="test/config.php">
 <testsuites>
   <testsuite name="Unit">
-    <directory>unit</directory>
+    <directory>test/unit</directory>
   </testsuite>
   <testsuite name="Acceptance">
-    <directory>acceptance</directory>
+    <directory>test/acceptance</directory>
   </testsuite>
 </testsuites>
 </phpunit>

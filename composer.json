@@ -2,7 +2,7 @@
     "name": "shabbyrobe/phonycron",
     "description": "PHP cron",
     "keywords": ["cron"],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": "MIT",
     "homepage": "http://k3jw.com/code/phonycron/",
     "authors": [
@@ -18,6 +18,6 @@
         "phpunit/phpunit": "4.1.*"
     },
     "autoload": {
-        "psr-0": { "Phonycron": "src/" }
+        "psr-4": { "Phonycron\\": "src/" }
     }
 }

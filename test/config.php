@@ -20,12 +20,6 @@
  * http://k3jw.com 
  */
 
-require_once(__DIR__.'/../src/Loader.php');
-
-date_default_timezone_set('Australia/Melbourne');
-
-spl_autoload_register(array(new Phonycron\Loader, 'load'));
-
 abstract class CustomTestCase extends \PHPUnit_Framework_TestCase
 {
     protected function callProtected($class, $name)

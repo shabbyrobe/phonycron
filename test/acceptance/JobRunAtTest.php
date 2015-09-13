@@ -9,7 +9,7 @@ class JobRunAtTest extends \CustomTestCase
     /**
      * @dataProvider dataForRuns
      */
-    public function testRuns($cronTime, $date, $runs=true)
+    public function testRuns($runs, $cronTime, $date)
     {
         $result = $this->runs($cronTime, $date);
         $this->assertEquals($runs, $result);
@@ -18,30 +18,30 @@ class JobRunAtTest extends \CustomTestCase
     public function dataForRuns()
     {
         return array(
-            array('* * * * *', '2011-01-01 10:00'),
-            array('1 * * * *', '2011-01-01 10:01'),
-            array('2 * * * *', '2011-01-01 10:01', false),
+            array(true , '* * * * *', '2011-01-01 10:00'),
+            array(true , '1 * * * *', '2011-01-01 10:01'),
+            array(false, '2 * * * *', '2011-01-01 10:01'),
             
-            array('*/4 * * * *', '2011-01-01 10:00'),
-            array('*/4 * * * *', '2011-01-01 10:04'),
-            array('*/4 * * * *', '2011-01-01 10:05', false),
-            array('*/4 * * * *', '2011-01-01 10:59', false),
-            array('*/4 * * * *', '2011-01-01 11:00'),
+            array(true , '*/4 * * * *', '2011-01-01 10:00'),
+            array(true , '*/4 * * * *', '2011-01-01 10:04'),
+            array(false, '*/4 * * * *', '2011-01-01 10:05'),
+            array(false, '*/4 * * * *', '2011-01-01 10:59'),
+            array(true , '*/4 * * * *', '2011-01-01 11:00'),
             
-            array('1 2 3 4 *', '2011-04-03 02:01'),
-            array('1 2 3 4 *', '2011-03-03 02:01', false),
-            array('1 2 3 4 *', '2011-04-04 02:01', false),
-            array('1 2 3 4 *', '2011-04-03 01:01', false),
-            array('1 2 3 4 *', '2011-04-03 01:01', false),
+            array(true , '1 2 3 4 *', '2011-04-03 02:01'),
+            array(false, '1 2 3 4 *', '2011-03-03 02:01'),
+            array(false, '1 2 3 4 *', '2011-04-04 02:01'),
+            array(false, '1 2 3 4 *', '2011-04-03 01:01'),
+            array(false, '1 2 3 4 *', '2011-04-03 01:01'),
             
-            array('1 2 L 4 *', '2011-04-30 02:01'),
-            array('1 2 L 4 *', '2011-04-29 02:01', false),
+            array(true , '1 2 L 4 *', '2011-04-30 02:01'),
+            array(false, '1 2 L 4 *', '2011-04-29 02:01'),
             
-            array('1 2 L 5 *', '2011-05-31 02:01'),
-            array('1 2 L 5 *', '2011-05-30 02:01', false),
+            array(true , '1 2 L 5 *', '2011-05-31 02:01'),
+            array(false, '1 2 L 5 *', '2011-05-30 02:01'),
             
-            array('* * * * FRI', strtotime('next friday')),
-            array('* * * * FRI', strtotime('next thursday'), false),
+            array(true , '* * * * FRI', strtotime('next friday')),
+            array(false, '* * * * FRI', strtotime('next thursday')),
         );
     }
     
@@ -49,14 +49,14 @@ class JobRunAtTest extends \CustomTestCase
     {    
         if (is_int($date)) {
             $date = new \DateTime('@'.$date);
-        }
-        else {
+        } else {
             $date = \DateTime::createFromFormat('Y-m-d H:i', $date);
         }
+
         $jobString = $cronTime.' JOB';
         $parser = new Parser();
         $jobs = $parser->parse($jobString, false);
-        $runs = $jobs[0]->runsAt($date->getTimestamp());
+        $runs = $jobs[0]->runsAt($date);
         return $runs;
     }
 }

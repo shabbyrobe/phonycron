@@ -25,18 +25,26 @@ class Job
     
     public function runsAt($time)
     {
-        if (!in_array(date('i', $time), $this->minutes))
+        $time = Functions::ensureDateTime($time);
+
+        if (!in_array($time->format('i'), $this->minutes)) {
             return false;
-        if (!in_array(date('H', $time), $this->hours)) 
+        }
+        if (!in_array($time->format('H'), $this->hours))  {
             return false;
-        if ($this->daysOfMonth != self::LAST_DAY_OF_MONTH && !in_array(date('j', $time), $this->daysOfMonth)) 
+        }
+        if ($this->daysOfMonth != self::LAST_DAY_OF_MONTH && !in_array($time->format('j'), $this->daysOfMonth))  {
             return false;
-        if ($this->daysOfMonth == self::LAST_DAY_OF_MONTH && date('j', $time) != date('t', $time))
+        }
+        if ($this->daysOfMonth == self::LAST_DAY_OF_MONTH && $time->format('j') != $time->format('t')) {
             return false;
-        if (!in_array(date('w', $time), $this->daysOfWeek))
+        }
+        if (!in_array($time->format('w'), $this->daysOfWeek)) {
             return false;
-        if (!in_array(date('n', $time), $this->months))
+        }
+        if (!in_array($time->format('n'), $this->months)) {
             return false;
+        }
         return true;
     }
     
@@ -54,7 +62,9 @@ class Job
         $max = null;
         foreach ($jobList as $job) {
             $runs = $job->maxRunsPerDay();
-            if ($runs > $max) $max = $runs;
+            if ($runs > $max) {
+                $max = $runs;
+            }
         }
         return $max;
     }

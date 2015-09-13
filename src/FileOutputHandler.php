@@ -7,8 +7,9 @@ class FileOutputHandler implements OutputHandler
 
     public function __construct($file)
     {
-        if (!is_writable(dirname($file)))
+        if (!is_writable(dirname($file))) {
             throw new \InvalidArgumentException("Directory for cron file was not writable");
+        }
         
         $this->file = $file;
     }
@@ -20,8 +21,9 @@ class FileOutputHandler implements OutputHandler
         $h = fopen($this->file, 'a');
         fwrite($h, date('Y-m-d H:i:s').': '.$job->raw.PHP_EOL);
         
-        if ($output)
+        if ($output) {
             fwrite($h, $output.PHP_EOL.PHP_EOL);
+        }
         
         fclose($h);
     }

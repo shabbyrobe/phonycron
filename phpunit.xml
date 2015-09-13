@@ -1,0 +1,28 @@
+<phpunit
+        bootstrap="test/config.php"
+        backupStaticAttributes="false"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        checkForUnintentionallyCoveredCode="false"
+        beStrictAboutTestsThatDoNotTestAnything="true"
+        beStrictAboutOutputDuringTests="true"
+        beStrictAboutTestSize="true"
+        verbose="true">
+
+<testsuites>
+  <testsuite name="test">
+    <directory>test</directory>
+  </testsuite>
+</testsuites>
+<groups>
+  <exclude>
+    <group>faulty</group>
+  </exclude>
+</groups>
+<filter>
+  <whitelist addUncoveredFilesFromWhitelist="true">
+    <directory suffix=".php">src</directory>
+  </whitelist>
+</filter>
+</phpunit>

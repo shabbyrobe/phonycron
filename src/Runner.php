@@ -9,9 +9,8 @@ abstract class Runner
     
     public function run(array $jobs, $runTime)
     {
-        if (!is_numeric($runTime))
-            throw new \InvalidArgumentException();
-        
+        $runTime = Functions::ensureDateTime($runTime);
+
         $toRun = array();
         foreach ($jobs as $job) {
             if ($job->runsAt($runTime)) {
@@ -23,8 +22,9 @@ abstract class Runner
             ob_start();
             $output = $this->runDue($job);
             $output .= ob_get_clean();
-            if ($this->outputHandler)
+            if ($this->outputHandler) {
                 $this->outputHandler->handle($job, $output);
+            }
         }
     }
 }

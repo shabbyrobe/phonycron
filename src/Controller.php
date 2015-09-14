@@ -10,7 +10,8 @@ class Controller
     public $crontab;
     public $outputHandle;
     public $errorHandle;
-    public $tz;
+
+    private $tz;
     
     protected $usage;
     
@@ -19,10 +20,6 @@ class Controller
         if (!$runner) {
             $runner = new SystemRunner();
             $runner->cwd = $cwd;
-        }
-        
-        if (!$parser) {
-            $parser = new Parser();
         }
         
         $this->crontab = $crontab;
@@ -34,6 +31,10 @@ class Controller
             $tz = new \DateTimeZone(date_default_timezone_get());
         }
         $this->tz = $tz ?: null;
+
+        if (!$parser) {
+            $parser = new Parser($tz);
+        }
         
         $this->usage = 
             "cron.php [OPTIONS]\n".
@@ -55,9 +56,9 @@ class Controller
             $options['r'] = true;
         }
 
-        $runTime = new \DateTime('now');
+        $runTime = new \DateTime('now', $this->tz);
         if (isset($options['t'])) {
-            $runTime = new \DateTime($options['t']);
+            $runTime = new \DateTime($options['t'], $this->tz);
             if (isset($options['v'])) {
                 $this->out("Run time set to ".$runTime->format('Y-m-d H:i').PHP_EOL);
             }

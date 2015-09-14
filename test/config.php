@@ -53,11 +53,11 @@ abstract class JobTestCase extends CustomTestCase
     protected function createDummyJob($time, $command = 'JOB')
     {
         $jobString = $time.' '.$command;
-        $parser = new \Phonycron\Parser();
+        $parser = new \Phonycron\Parser(new \DateTimeZone('Australia/Melbourne'));
         $jobs = $parser->parse($jobString, false);
-        if (!$jobs)
+        if (!$jobs) {
             throw new \UnexpectedValueException("Job parsing failed: $jobString");
-        
+        }
         return $jobs[0];
     }
 }

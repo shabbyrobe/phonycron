@@ -7,7 +7,7 @@ class ParseNumericTest extends \CustomTestCase
 {
     public function setUp()
     {
-        $this->parser = new Parser;
+        $this->parser = new Parser(new \DateTimeZone('Australia/Melbourne'));
     }
 
     /**

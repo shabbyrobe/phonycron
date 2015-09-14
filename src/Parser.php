@@ -14,6 +14,13 @@ class Parser
     public $hasUsers = false;
     
     public $allowEmptyJob = false;
+
+    public $tz;
+
+    public function __construct(\DateTimeZone $tz)
+    {
+        $this->tz = $tz;
+    }
     
     private function splitByLine($raw)
     {
@@ -27,10 +34,11 @@ class Parser
     
     public function parse($raw)
     {
-        if (!is_array($raw))
+        if (!is_array($raw)) {
             $items = $this->splitByLine($raw);
-        else
+        } else {
             $items = $raw;
+        }
     
         $fieldCount = $this->hasUsers ? 7 : 6;
     
@@ -39,14 +47,18 @@ class Parser
             ++$line;
             $i = trim($i);
             
-            if (empty($i) || $i[0] == '#') continue;
+            if (empty($i) || $i[0] == '#') {
+                continue;
+            }
             if ($i[0] == '@') {
                 $space = strpos($i, ' ');
-                if ($space === false)
+                if ($space === false) {
                     throw new ParseException("Unparseable macro line $i");
+                }
                 $macro = substr($i, 0, $space);
-                if (!isset($this->macros[$macro]))
+                if (!isset($this->macros[$macro])) {
                     throw new ParseException("Unrecognised macro $macro");
+                }
                 $i = str_replace($macro, $this->macros[$macro], $i);
             }
     
@@ -54,11 +66,13 @@ class Parser
             $splitCount = count($split);
             $min = $fieldCount - ($this->allowEmptyJob ? 1 : 0);
             $max = $fieldCount;
-            if ($splitCount < $min || $splitCount > $max)
+            if ($splitCount < $min || $splitCount > $max) {
                 throw new ParseException("Invalid cron job at line {$line}");
+            }
         
             $job = new Job;
             $job->raw = trim($i);
+            $job->tz = $this->tz;
             
             $commandIndex = $this->hasUsers ? 6 : 5;
             if (isset($split[$commandIndex])) {
@@ -69,24 +83,29 @@ class Parser
             }
             
             $job->minutes = $this->parseNumeric($split[0], 0, 59);
-            if ($job->minutes === false)
+            if ($job->minutes === false) {
                 throw new ParseException("Unparseable minutes on line $line");
+            }
             
             $job->hours = $this->parseNumeric($split[1], 0, 23);
-            if ($job->hours === false)
+            if ($job->hours === false) {
                 throw new ParseException("Unparseable hour on line $line");
+            }
             
             $job->daysOfMonth = $this->parseDayOfMonth($split[2]);
-            if ($job->daysOfMonth === false)
+            if ($job->daysOfMonth === false) {
                 throw new ParseException("Unparseable day of month on line $line");
+            }
             
             $job->months = $this->parseMonth($split[3]);
-            if ($job->months === false)
+            if ($job->months === false) {
                 throw new ParseException("Unparseable month on line $line");
+            }
             
             $job->daysOfWeek = $this->parseDayOfWeek($split[4]);
-            if ($job->daysOfWeek === false)
+            if ($job->daysOfWeek === false) {
                 throw new ParseException("Unparseable day of week on line $line");
+            }
             
             if ($job->daysOfMonth === null && $job->daysOfWeek === null) {
                 throw new ParseException("Value omitted for both day of month and day of week on line $line");

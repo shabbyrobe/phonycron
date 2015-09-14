@@ -13,6 +13,8 @@ class Job
     public $daysOfMonth;
     public $months;
     public $daysOfWeek;
+
+    public $tz;
     
     public $hash;
     
@@ -23,9 +25,12 @@ class Job
      */
     public $metadata = array();
     
-    public function runsAt($time)
+    public function runsAt(\DateTimeInterface $time)
     {
-        $time = Functions::ensureDateTime($time);
+        if ($time->getTimeZone() != $this->tz) {
+            $time = clone $time;
+            $time->setTimeZone($this->tz);
+        }
 
         if (!in_array($time->format('i'), $this->minutes)) {
             return false;

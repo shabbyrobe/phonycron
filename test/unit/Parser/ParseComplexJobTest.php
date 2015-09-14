@@ -15,7 +15,7 @@ class ParseComplexJobTest extends \CustomTestCase
 {
     public function setUp()
     {
-        $this->parser = new Parser;
+        $this->parser = new Parser(new \DateTimeZone('Australia/Melbourne'));
         
         $jobs = $this->parser->parse('2-59/3 1,5-7,10-11,22 11-26 1-6 ? do stuff');
         $this->job = $jobs[0];
@@ -27,7 +27,7 @@ class ParseComplexJobTest extends \CustomTestCase
      */
     public function testRunsAt($date, $time, $runs)
     {
-        $timestamp = strtotime($date.$time);
+        $timestamp = \DateTime::createFromFormat('YmdHi', $date.$time);
         $this->assertEquals($runs, $this->job->runsAt($timestamp));
     }
     

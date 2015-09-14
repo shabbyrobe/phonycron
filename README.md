@@ -9,6 +9,24 @@ It is not 100% complete, but it should be compatible with almost every cron job
 you will ever use. See the *Limitations* section for more information.
 
 
+Install
+-------
+
+*Phonycron* can be installed using [Composer](http://getcomposer.org) by
+ensuring your `composer.json` file contains the following:
+
+```
+{
+    "require": {
+        "shabbyrobe/phonycron": "2.0.*"
+    }
+}
+```
+
+You can also download *Phonycron* directly from the `GitHub
+<http://github.com/shabbyrobe/phonycron>`_ page.
+
+
 Quickstart
 ----------
 
@@ -38,18 +56,26 @@ echo "Script 1";
 echo "Script 2";
 ```
 
-Create a PHP script called `cron.php` in your project:
+Create a PHP script called `cron.php` in your project with the following:
+
+```php
+require 'vendor/autoload.php';
+
+$crontab = file_get_contents(__DIR__.'/crontab');
+$controller = new \Phonycron\Controller($crontab, __DIR__);
+$controller->run();
+```
+
+
+Or do things the hard way if you prefer:
 
 ```php
 <?php
-// Register phonycron's default autoloader.
-$phonycronPath = '/path/to/phonycron';
-require_once($phonycronPath.'/src/Loader.php');
-Phonycron\Loader::register();
-
+require 'vendor/autoload.php';
 
 // Parse the crontab 
-$parser = new Phonycron\Parser();
+$tz = new \DateTimeZone('Australia/Melbourne');
+$parser = new Phonycron\Parser($tz);
 $jobs = $parser->parse(file_get_contents(__DIR__.'/crontab'));
 
 

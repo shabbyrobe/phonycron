@@ -46,15 +46,17 @@ class JobRunAtTest extends \CustomTestCase
     }
     
     public function runs($cronTime, $date)
-    {    
+    {
+        $tz = new \DateTimeZone('Australia/Melbourne');
         if (is_int($date)) {
             $date = new \DateTime('@'.$date);
+            $date->setTimeZone($tz);
         } else {
-            $date = \DateTime::createFromFormat('Y-m-d H:i', $date);
+            $date = \DateTime::createFromFormat('Y-m-d H:i', $date, $tz);
         }
 
         $jobString = $cronTime.' JOB';
-        $parser = new Parser();
+        $parser = new Parser(new \DateTimeZone('Australia/Melbourne'));
         $jobs = $parser->parse($jobString, false);
         $runs = $jobs[0]->runsAt($date);
         return $runs;

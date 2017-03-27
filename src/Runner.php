@@ -7,10 +7,8 @@ abstract class Runner
     
     protected abstract function runDue(Job $job);
     
-    public function run(array $jobs, $runTime)
+    public function run(array $jobs, \DateTime $runTime)
     {
-        $runTime = Functions::ensureDateTime($runTime);
-
         $toRun = array();
         foreach ($jobs as $job) {
             if ($job->runsAt($runTime)) {

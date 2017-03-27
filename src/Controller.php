@@ -15,26 +15,25 @@ class Controller
     
     protected $usage;
     
-    public function __construct($crontab, $cwd, $runner=null, $parser=null, $tz=false)
+    public function __construct($crontab, $cwd, $runner=null, $parser=null, $tz=null)
     {
         if (!$runner) {
             $runner = new SystemRunner();
             $runner->cwd = $cwd;
         }
-        
+        if ($tz === null) {
+            $tz = new \DateTimeZone(date_default_timezone_get());
+        }
+        if (!$parser) {
+            $parser = new Parser($tz);
+        }
+
+        $this->tz = $tz;
         $this->crontab = $crontab;
         $this->runner = $runner;
         $this->cwd = $cwd;
         $this->parser = $parser;
 
-        if ($tz === null) {
-            $tz = new \DateTimeZone(date_default_timezone_get());
-        }
-        $this->tz = $tz ?: null;
-
-        if (!$parser) {
-            $parser = new Parser($tz);
-        }
         
         $this->usage = 
             "cron.php [OPTIONS]\n".

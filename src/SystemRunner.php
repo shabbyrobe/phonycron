@@ -15,8 +15,9 @@ class SystemRunner extends Runner
     protected function runDue(Job $job)
     {
         $output = null;
-        if ($this->cwd)
+        if ($this->cwd) {
             chdir($this->cwd);
+        }
         
         $spec = [['pipe', 'r'], ['pipe', 'w'],  ['pipe', 'w']];
         $p = proc_open($job->command, $spec, $pipes);

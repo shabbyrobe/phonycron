@@ -8,6 +8,12 @@ project, while maintaining compatibility with an existing complex crontab.
 It is not 100% complete, but it should be compatible with almost every cron job
 you will ever use. See the *Limitations* section for more information.
 
+Supports PHP 5.6 to 7.2.
+
+For PHP 5.3 to 5.5 users, this may continue to work but if it breaks, the last
+tested version available for PHP ``<= 5.5`` can be found here:
+https://github.com/shabbyrobe/phonycron/commit/14d2acc550689652f540d7ec520dca212160a700
+
 
 Install
 -------
